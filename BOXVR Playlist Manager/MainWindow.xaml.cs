@@ -225,7 +225,15 @@ namespace BoxVR_Playlist_Manager
         private void LoadPlaylists()
         {
             App.logger.Trace("Playlists loading");
-            Playlists = new ObservableCollection<Playlist>();
+            if (Playlists == null)
+            {
+                Playlists = new ObservableCollection<Playlist>();
+            }
+            else
+            {
+                Playlists.Clear();
+            }
+
             var playlistPath = System.IO.Path.Combine(Environment.ExpandEnvironmentVariables(Properties.Settings.Default.BoxVRAppDataPath), "Playlists");
 
             if (Directory.Exists(playlistPath))
@@ -251,10 +259,13 @@ namespace BoxVR_Playlist_Manager
             SelectedPlaylist = p;
         }
 
-        private void btnSavePlaylist_Click(object sender, RoutedEventArgs e)
+        private async void btnSavePlaylist_Click(object sender, RoutedEventArgs e)
         {
             if (SelectedPlaylist != null)
-                Task.Run(async () => await SelectedPlaylist.Save());
+            {
+                await Task.Run(() => SelectedPlaylist.Save());
+                LoadPlaylists();
+            }
         }
 
         private void btnImportPlaylist_Click(object sender, RoutedEventArgs e)
