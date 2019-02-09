@@ -335,6 +335,7 @@ namespace BoxVR_Playlist_Manager
                         { "WebM DASH Manifest", "*.webm_dash_manifest" },
                         { "piped webp sequence", "*.webp_pipe" },
                         { "WebVTT subtitle", "*.webvtt" },
+                        { "Windows Media Audio", "*.wma" },
                         { "Westwood Studios audio", "*.wsaud" },
                         { "Wideband Single-bit Data (WSD)", "*.wsd" },
                         { "Westwood Studios VQA", "*.wsvqa" },
