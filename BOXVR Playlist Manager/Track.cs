@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Xml;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -32,10 +33,36 @@ namespace BoxVR_Playlist_Manager
         public int DurationInt => _atlTrack.Duration;
         public TimeSpan Duration => new TimeSpan(0, 0, DurationInt);
 
+        public double TrackNum => _atlTrack.TrackNumber;
+
         public Track(string path)
         {
             Path = path;
             _atlTrack = new ATL.Track(path);
+        }
+
+        public string AverageBpm
+        {
+            get
+            {
+                string avgBpm = "N/A";
+                string filenameWithoutExt = System.IO.Path.GetFileNameWithoutExtension(Path);
+                string pathToBeatData = Environment.ExpandEnvironmentVariables(String.Format("%userprofile%\\AppData\\LocalLow\\FITXR\\BOXVR\\{0}.beatstructuremadmom.txt", filenameWithoutExt));
+
+                var xml = new XmlDocument();
+                try
+                {
+                    xml.Load(pathToBeatData);
+                    decimal avgBpmDec = Decimal.Parse(xml.DocumentElement.SelectSingleNode("//*[local-name()='AverageBpm']").InnerText);
+                    avgBpm = Math.Round(avgBpmDec).ToString();
+                }
+                catch
+                {
+                    Console.Write("can't find beat structure for " + filenameWithoutExt);
+                }
+
+                return avgBpm;
+            }
         }
 
         public override bool Equals(Track x, Track y)
